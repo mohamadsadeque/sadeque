@@ -1,2 +1,0 @@
-# sadeque
-primeira p
