@@ -8,14 +8,14 @@ blocos[4] =  [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1];
 blocos[5] =  [1,0,1,1,0,1,0,1,1,1,1,1,1,1,0,1,0,1,1,0,1];
 blocos[6] =  [1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1];
 blocos[7] =  [1,1,1,1,0,1,1,1,1,0,1,0,1,1,1,1,0,1,1,1,1];
-blocos[8] =  [1,1,1,1,0,1,0,0,0,0,0,0,0,0,0,1,0,1,1,1,1];
-blocos[9] =  [1,1,1,1,0,1,0,1,1,1,0,1,1,1,0,1,0,1,1,1,1];
-blocos[10] = [1,0,0,0,0,0,0,1,1,1,0,1,1,1,0,0,0,0,0,0,1];
+blocos[8] =  [1,1,1,1,0,1,0,0,0,0,1,0,0,0,0,1,0,1,1,1,1];
+blocos[9] =  [1,1,1,1,0,1,0,1,1,1,1,1,1,1,0,1,0,1,1,1,1];
+blocos[10] = [1,0,0,0,0,0,0,1,1,1,1,1,1,1,0,0,0,0,0,0,1];
 blocos[11] = [1,1,1,1,0,1,0,0,0,0,0,0,0,0,0,1,0,1,1,1,1];
 blocos[12] = [1,1,1,1,0,1,0,1,1,1,1,1,1,1,0,1,0,1,1,1,1];
 blocos[13] = [1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1];
-blocos[14] = [1,0,1,1,0,1,1,1,1,1,1,1,1,1,1,1,0,1,1,0,1];
-blocos[15] = [1,0,0,1,0,0,0,0,0,1,0,1,0,0,0,0,0,1,0,0,1];
+blocos[14] = [1,0,1,1,0,1,1,1,1,0,1,0,1,1,1,1,0,1,1,0,1];
+blocos[15] = [1,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,1];
 blocos[16] = [1,1,0,1,0,1,0,1,1,1,0,1,1,1,0,1,0,1,0,1,1];
 blocos[17] = [1,0,0,0,0,1,0,0,0,0,0,0,0,0,0,1,0,0,0,0,1];
 blocos[18] = [1,0,1,1,1,1,1,1,1,0,0,0,1,1,1,1,1,1,1,0,1];
@@ -26,7 +26,7 @@ var d = 1;
 var v = 3;
 var placar = 0;
 var x = 420;
-var y = 620;
+var y = 660;
 var aleatorio;
 var velx = [4,4,4,-4,0,4,4,4,-4,4];
 var vely = [0,0,0,0,-4,4,0,4,0,0];
@@ -49,7 +49,7 @@ function preload() {
 for(i=0;i <5;i++){
    img_fase[i] = loadImage("figura/fases/fase"+i+".png");
 }
-
+gameover = loadImage("figura/menu/gameover.png");
 
 
 parede = loadImage("figura/parede.png");
@@ -63,7 +63,18 @@ function setup() {
   
 }
 
-	
+	function move(){
+		if(keyIsDown(LEFT_ARROW)&&!limite(x-4,y)){
+			x-=8;
+    } if(keyIsDown(RIGHT_ARROW)&&!limite(x+4,y)){
+			x+=8;
+  	} if(keyIsDown(UP_ARROW)&&!limite(x,y-4)){
+			y-=8;			
+    } if(keyIsDown(DOWN_ARROW)&&!limite(x,y+4)){
+			y+=8;
+		}
+		}
+		
 function monstro(numero_m, posx_m,posy_m){
 
 	if(lim_monstro(posx_m+4,posy_m)){
@@ -215,7 +226,7 @@ function colisao(player_x,player_y,monstro_x,monstro_y){
       if(dist(player_x,player_y,monstro_x,monstro_y)<40){
 		  v--;
 		  x = 420;
-		  y = 620;
+		  y = 660;
 		  }
 	return false
 }	
@@ -294,16 +305,8 @@ if(mouseIsPressed && (mouseX >= 550 && mouseX <= 630) && (mouseY >= 520 && mouse
 			}
 	}
   }
-
-	if(keyIsDown(LEFT_ARROW)&&!limite(x-4,y)){
-			x-=8;
-    } if(keyIsDown(RIGHT_ARROW)&&!limite(x+4,y)){
-			x+=8;
-  	} if(keyIsDown(UP_ARROW)&&!limite(x,y-4)){
-			y-=8;			
-    } if(keyIsDown(DOWN_ARROW)&&!limite(x,y+4)){
-			y+=8;
-		}
+	
+	move();
 	itens(x,y);
 	teleport();
 	noStroke();
@@ -321,7 +324,14 @@ if(mouseIsPressed && (mouseX >= 550 && mouseX <= 630) && (mouseY >= 520 && mouse
 			
 		 
 		  }
+	if(v == 0){
+		tela = 6
+		}	  
+		  
 	}
-	  
+else if(tela == 6){
+	background(255);
+	 image(gameover,0,0);
+	}
 	
   	}
