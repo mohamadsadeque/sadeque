@@ -14,11 +14,11 @@ blocos[10] = [1,0,0,0,0,0,0,1,1,1,0,1,1,1,0,0,0,0,0,0,1];
 blocos[11] = [1,1,1,1,0,1,0,0,0,0,0,0,0,0,0,1,0,1,1,1,1];
 blocos[12] = [1,1,1,1,0,1,0,1,1,1,1,1,1,1,0,1,0,1,1,1,1];
 blocos[13] = [1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1];
-blocos[14] = [1,0,1,1,0,1,1,1,1,0,1,0,1,1,1,1,0,1,1,0,1];
-blocos[15] = [1,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,1];
-blocos[16] = [1,1,0,1,0,1,0,1,1,1,1,1,1,1,0,1,0,1,0,1,1];
-blocos[17] = [1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1];
-blocos[18] = [1,0,1,1,1,1,1,1,1,0,1,0,1,1,1,1,1,1,1,0,1];
+blocos[14] = [1,0,1,1,0,1,1,1,1,1,1,1,1,1,1,1,0,1,1,0,1];
+blocos[15] = [1,0,0,1,0,0,0,0,0,1,0,1,0,0,0,0,0,1,0,0,1];
+blocos[16] = [1,1,0,1,0,1,0,1,1,1,0,1,1,1,0,1,0,1,0,1,1];
+blocos[17] = [1,0,0,0,0,1,0,0,0,0,0,0,0,0,0,1,0,0,0,0,1];
+blocos[18] = [1,0,1,1,1,1,1,1,1,0,0,0,1,1,1,1,1,1,1,0,1];
 blocos[19] = [1,3,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,3,1];
 blocos[20] = [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1];
 
@@ -34,18 +34,33 @@ var monstroX = [420,80,500,80,540,540,700,700,700,420];
 var monstroY = [420,80,80,540,540,540,80,700,700,420];
 var parede;
 var fantasma;
+var menu = [];
+var img_fase = [];
 var coracao;
 var temp = 0;
+var tela = 0;
+var contFrame = 0;
+var tempo_menu = 0;
 
 function preload() {
-parede= loadImage("figura/parede.png");
+  for(i=0;i <=1;i++){
+   menu[i] = loadImage("figura/menu/menu"+(i+1)+".png");
+}
+for(i=0;i <5;i++){
+   img_fase[i] = loadImage("figura/fases/fase"+i+".png");
+}
+
+
+
+parede = loadImage("figura/parede.png");
 fantasma= loadImage("figura/fantasma.png");
 //coracao= loadImage("figuras/coracao.png");
 }
 function setup() {
-	frameRate(30);
+  frameRate(30);
   createCanvas(1040, 840);
   rect(840,0,200,1040);
+  
 }
 
 	
@@ -194,8 +209,6 @@ text("Dificuldade: ", 850, 100);
 	for(p = 0; p < d; p++ ){
 		rect(p*11 + 850, 120, 10, 10);
 		}
-		//TIME
-text(Math.floor(temp/30), 850, 150);	
 		}
 
 function colisao(player_x,player_y,monstro_x,monstro_y){
@@ -229,12 +242,47 @@ function lim_monstro(nx,ny){
   	return false
 }
 function draw() {
+ if(tela == 0){ 
+  anima = menu[contFrame];
+  image( anima, 0, 0);
+  tempo_menu++
+  if(tempo_menu > 15){
+  contFrame++;
+}
+  if ( contFrame > 1) {
+     contFrame = 0; 
+     tempo_menu = 0 
+  }
+for(i=0;i<5;i++){
+	image(img_fase[i],(i*100)+150, 520);
+
+}
+if(mouseIsPressed && (mouseX >= 150 && mouseX <= 230) && (mouseY >= 520 && mouseY <= 600) )	 {
+	tela = 1;
+	} 
+if(mouseIsPressed && (mouseX >= 250 && mouseX <= 330) && (mouseY >= 520 && mouseY <= 600) )	 {
+	tela = 2;
+	}
+if(mouseIsPressed && (mouseX >= 350 && mouseX <= 430) && (mouseY >= 520 && mouseY <= 600) )	 {
+	tela = 3 ;
+	}
+if(mouseIsPressed && (mouseX >= 450 && mouseX <= 530) && (mouseY >= 520 && mouseY <= 600) )	 {
+	tela = 4 ;
+	}
+if(mouseIsPressed && (mouseX >= 550 && mouseX <= 630) && (mouseY >= 520 && mouseY <= 600) )	 {
+	tela = 5 ;
+	}
+
+  
+ }
+ 
+ else if(tela == 1){
   background(0);
+  d = tela;
   for(var i = 0; i < 21; i++){
    for(var j = 0; j <21; j++){
 			if(blocos[j][i] == 1){
               	noStroke();
-              	//fill(Math.floor(Math.random() * 256),Math.floor(Math.random() * 256),Math.floor(Math.random() * 256)); //LOUCURA
 				  rect(i*40,j*40 , 40, 40);
 				  image(parede,i*40,j*40);
 						}
@@ -263,20 +311,17 @@ function draw() {
 	  
 	  
 	  Info();
-	  for(i=0;i<(d*2);i++){
+	  for(i=0;i<10;i++){
 		monstro(i, monstroX[i],monstroY[i]); 
 		image(fantasma,monstroX[i]-15, monstroY[i]-15)
-		//ellipse(monstroX[i],monstroY[i], 30, 30)
 		colisao(x,y,monstroX[i],monstroY[i]);
 	  }
 	  if(placar >= 100 && d <5){
-
 			placar = 0;
 			
-				d++;
-				
 		 
 		  }
+	}
 	  
 	
   	}
