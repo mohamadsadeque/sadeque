@@ -253,6 +253,8 @@ function lim_monstro(nx,ny){
   	return false
 }
 function draw() {
+// MENU MENU MENU MENU MENU MENU MENU MENU MENU MENU MENU MENU MENU MENU MENU 
+// MENU MENU MENU MENU MENU MENU MENU MENU MENU MENU MENU MENU MENU MENU MENU 
  if(tela == 0){ 
   anima = menu[contFrame];
   image( anima, 0, 0);
@@ -286,7 +288,10 @@ if(mouseIsPressed && (mouseX >= 550 && mouseX <= 630) && (mouseY >= 520 && mouse
 
   
  }
- 
+
+// Fase 1 Fase 1 Fase 1 Fase 1 Fase 1 Fase 1 Fase 1 Fase 1 Fase 1 Fase 1 Fase 1
+// Fase 1 Fase 1 Fase 1 Fase 1 Fase 1 Fase 1 Fase 1 Fase 1 Fase 1 Fase 1 Fase 1
+
  else if(tela == 1){
   background(0);
   d = tela;
@@ -319,9 +324,8 @@ if(mouseIsPressed && (mouseX >= 550 && mouseX <= 630) && (mouseY >= 520 && mouse
 		image(fantasma,monstroX[i]-15, monstroY[i]-15)
 		colisao(x,y,monstroX[i],monstroY[i]);
 	  }
-	  if(placar >= 100 && d <5){
-			placar = 0;
-			
+	  if(placar >= 500){
+		tela = 7	
 		 
 		  }
 	if(v == 0){
@@ -329,9 +333,34 @@ if(mouseIsPressed && (mouseX >= 550 && mouseX <= 630) && (mouseY >= 520 && mouse
 		}	  
 		  
 	}
+
+// GAME OVER GAME OVER GAME OVER GAME OVER GAME OVER GAME OVER GAME OVER	
+// GAME OVER GAME OVER GAME OVER GAME OVER GAME OVER GAME OVER GAME OVER	
+
 else if(tela == 6){
 	background(255);
 	 image(gameover,0,0);
+	 if (keyIsDown(ENTER) ) {
+       d = 1;
+v = 3;
+placar = 0;
+x = 420;
+y = 660;
+velx = [4,4,4,-4,0,4,4,4,-4,4];
+vely = [0,0,0,0,-4,4,0,4,0,0];
+monstroX = [420,80,500,80,540,540,700,700,700,420];
+monstroY = [420,80,80,540,540,540,80,700,700,420];
+		 tela = 0; 
+    } 
+	 
+	}
+	
+// PARABÉNS, VOCÊ COMPLETOU O JOGO	
+// PARABÉNS, VOCÊ COMPLETOU O JOGO	
+
+else if(tela == 7){
+	background(255);
+	 image(zerou,0,0);
 	}
 	
   	}
