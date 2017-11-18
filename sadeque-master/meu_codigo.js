@@ -1,9 +1,10 @@
+    
 var blocos = new Array();
 var d = 1;
 var v = 3;
 var placar = 0;
-var x = 420;
-var y = 660;
+var x = 400;
+var y = 640;
 var aleatorio;
 var velx = [4,4,0,-4,0,4,4,4,-4,4];
 var vely = [0,0,-4,0,-4,4,0,4,0,0];
@@ -18,12 +19,31 @@ var coracao;
 var temp = 0;
 var tela = 0;
 var contFrame = 0;
-var contFrame2 = 0;
 var tempo_menu = 0;
 var tempo_game = 0;
+var pac_sentido = 0;
+var pac_cima=[];
+var pac_baixo=[];
+var pac_direita=[];
+var pac_esquerda=[];
+var zerou;
 
 function preload() {
-  for(i=0;i <=1;i++){
+zerou = loadImage("figura/zerou.png");
+for(i=0;i <=1;i++){
+   pac_cima[i] = loadImage("figura/pac/cima"+(i+1)+".png");
+}
+for(i=0;i <=1;i++){
+   pac_baixo[i] = loadImage("figura/pac/baixo"+(i+1)+".png");
+}
+for(i=0;i <=1;i++){
+   pac_direita[i] = loadImage("figura/pac/direita"+(i+1)+".png");
+}
+for(i=0;i <=1;i++){
+   pac_esquerda[i] = loadImage("figura/pac/esquerda"+(i+1)+".png");
+}
+
+ for(i=0;i <=1;i++){
    menu[i] = loadImage("figura/menu/menu"+(i+1)+".png");
 }
 
@@ -39,19 +59,76 @@ fantasma= loadImage("figura/fantasma.png");
 //coracao= loadImage("figuras/coracao.png");
 }
 function setup() {
-  frameRate(30);
+  frameRate(20);
   createCanvas(1040, 840);
   rect(840,0,200,1040);
 }
-	function move(){
+
+
+
+function pac_man(pac_sentido){
+	if(pac_sentido === 2){
+  pac= pac_direita[contFrame];
+  image( pac, x-20, y-20);
+
+  if(tempo_game> 10){
+  contFrame++;
+}
+  if ( contFrame > 1) {
+     contFrame = 0; 
+     tempo_menu = 0 
+  }  
+   tempo_game++
+		}
+	else if(pac_sentido === 1){
+  pac= pac_esquerda[contFrame];
+  image( pac, x-20, y-20);
+  tempo_game++
+  contFrame++;
+  if ( contFrame > 1 ) {
+     contFrame = 0; 
+  } 
+   
+		}
+	else if(pac_sentido === 3){
+  pac= pac_cima[contFrame];
+  image( pac, x-20, y-20);
+ 
+  if(tempo_game> 10){
+  contFrame++;
+}
+  if ( contFrame > 1) {
+     contFrame = 0; 
+     tempo_menu = 0 
+  }  
+  tempo_game++
+		}
+	else if(pac_sentido === 4){
+  pac= pac_baixo[contFrame];
+  image( pac, x-20, y-20);
+  tempo_game++
+  if(tempo_game> 10){
+  contFrame++;
+}
+  if ( contFrame > 1) {
+     contFrame = 0; 
+     tempo_menu = 0 
+  } 
+		}
+	}
+function move(){
 		if(keyIsDown(LEFT_ARROW)&&!limite(x-4,y)){
 			x-=8;
+			pac_sentido = 1
     } if(keyIsDown(RIGHT_ARROW)&&!limite(x+4,y)){
 			x+=8;
+			pac_sentido = 2
   	} if(keyIsDown(UP_ARROW)&&!limite(x,y-4)){
-			y-=8;			
+			y-=8;	
+			pac_sentido = 3	
     } if(keyIsDown(DOWN_ARROW)&&!limite(x,y+4)){
 			y+=8;
+			pac_sentido = 4
 		}
 		}
 
@@ -440,14 +517,14 @@ if(mouseIsPressed && (mouseX >= 550 && mouseX <= 630) && (mouseY >= 520 && mouse
 	move();
 	itens(x,y);
 	noStroke();
-  	ellipse(x, y, 40, 40);
+  	pac_man(pac_sentido);
 	Info();
 	 for(i=0;i<10;i++){
-		monstro(i, monstroX[i],monstroY[i]); 
+		 monstro(i, monstroX[i],monstroY[i]);
 		image(fantasma,monstroX[i]-15, monstroY[i]-15)
 		colisao(420,660,x,y,monstroX[i],monstroY[i]);
 	  }
-	  if(placar == 1990){
+	  if(placar == 2020){
 		blocos[0] =  [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1];
 		blocos[1] =  [1,3,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,3,1];
 		blocos[2] =  [1,0,1,1,0,1,1,1,1,1,0,1,1,1,1,1,0,1,1,0,1];
@@ -495,7 +572,7 @@ else if(tela === 2){
 	fase();
 	move();
 	itens(x,y);
-  	ellipse(x, y, 40, 40);
+  	pac_man(pac_sentido);
 	Info();
 	for(i=0;i<velx.length;i++){
 		monstro(i, monstroX[i],monstroY[i]); 
@@ -507,7 +584,7 @@ else if(tela === 2){
 		tela = 6
 		}	  
 	 if(placar == 2010){
-	blocos[0] =  [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1];
+		blocos[0] =  [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1];
 		blocos[1] =  [1,1,1,2,1,2,1,2,1,2,1,2,1,2,1,2,1,2,1,1,1];
 		blocos[2] =  [1,1,1,2,1,2,1,2,1,2,1,2,1,2,1,2,1,2,1,1,1];
 		blocos[3] =  [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1];
@@ -552,7 +629,7 @@ else if(tela === 3){
 	fase();
 	move();
 	itens(x,y);
-  	ellipse(x, y, 40, 40);
+	pac_man(pac_sentido);
 	Info();
 	for(i=0;i<velx.length;i++){
 		monstro(i, monstroX[i],monstroY[i]); 
@@ -608,7 +685,7 @@ else if(tela === 3){
 	fase();
 	move();
 	itens(x,y);
-  	ellipse(x, y, 40, 40);
+	pac_man(pac_sentido);
 	Info();
 	for(i=0;i<velx.length;i++){
 		monstro(i, monstroX[i],monstroY[i]); 
@@ -666,7 +743,7 @@ else if(tela === 3){
 	fase();
 	move();
 	itens(x,y);
-  	ellipse(x, y, 40, 40);
+	pac_man(pac_sentido);
 	Info();
 	for(i=0;i<velx.length;i++){
 		monstros_final(i, monstroX[i],monstroY[i]); 
@@ -688,14 +765,14 @@ else if(tela === 3){
 
 if(tela == 6){
 	 background(255);
-  game = gameover[contFrame2];
+  game = gameover[contFrame];
   image( game, 0, 0);
   tempo_game++
-  if(tempo_game> 15){
-  contFrame2++;
+  if(tempo_game> 30){
+  contFrame++;
 }
-  if ( contFrame2 > 1) {
-     contFrame2 = 0; 
+  if ( contFrame > 1) {
+     contFrame = 0; 
      tempo_menu = 0 
   } 
  
@@ -714,3 +791,4 @@ else if(tela == 7){
 	}
 	
   	}
+
