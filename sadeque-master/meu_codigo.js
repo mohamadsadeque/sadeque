@@ -11,7 +11,7 @@ var vely = [0,0,-4,0,-4,4,0,4,0,0];
 var monstroX = [420,80,500,80,540,540,700,700,700,420];
 var monstroY = [420,80,80,540,540,540,80,700,700,420];
 var parede;
-var fantasma;
+var fantasma = [];
 var gameover = [];
 var menu = [];
 var img_fase = [];
@@ -19,9 +19,11 @@ var coracao;
 var temp = 0;
 var tela = 0;
 var contFrame = 0;
+var contFrame2 = 0;
+var tempo_fantasma = 0;
 var tempo_menu = 0;
 var tempo_game = 0;
-var pac_sentido = 0;
+var pac_sentido = 1;
 var pac_cima=[];
 var pac_baixo=[];
 var pac_direita=[];
@@ -29,7 +31,7 @@ var pac_esquerda=[];
 var zerou;
 
 function preload() {
-zerou = loadImage("figura/zerou.png");
+
 for(i=0;i <=1;i++){
    pac_cima[i] = loadImage("figura/pac/cima"+(i+1)+".png");
 }
@@ -53,13 +55,18 @@ for(i=0;i <=1;i++){
 for(i=0;i <5;i++){
    img_fase[i] = loadImage("figura/fases/fase"+i+".png");
 }
+for(i=0;i < 7;i++){
+   fantasma[i] = loadImage("figura/fantasma/fantasma"+i+".png");
+}
+
+zerou = loadImage("figura/zerou.png");
 
 parede = loadImage("figura/parede.png");
-fantasma= loadImage("figura/fantasma.png");
+
 //coracao= loadImage("figuras/coracao.png");
 }
 function setup() {
-  frameRate(20);
+  frameRate(15);
   createCanvas(1040, 840);
   rect(840,0,200,1040);
 }
@@ -71,20 +78,24 @@ function pac_man(pac_sentido){
   pac= pac_direita[contFrame];
   image( pac, x-20, y-20);
 
-  if(tempo_game> 10){
+  if(tempo_game> 2){
   contFrame++;
+  tempo_game = 0 
 }
   if ( contFrame > 1) {
      contFrame = 0; 
-     tempo_menu = 0 
+
   }  
    tempo_game++
 		}
 	else if(pac_sentido === 1){
-  pac= pac_esquerda[contFrame];
+  pac = pac_esquerda[contFrame];
   image( pac, x-20, y-20);
   tempo_game++
+   if(tempo_game> 2){
   contFrame++;
+  tempo_game = 0 
+}
   if ( contFrame > 1 ) {
      contFrame = 0; 
   } 
@@ -94,8 +105,9 @@ function pac_man(pac_sentido){
   pac= pac_cima[contFrame];
   image( pac, x-20, y-20);
  
-  if(tempo_game> 10){
+   if(tempo_game> 2){
   contFrame++;
+  tempo_game = 0 
 }
   if ( contFrame > 1) {
      contFrame = 0; 
@@ -107,8 +119,9 @@ function pac_man(pac_sentido){
   pac= pac_baixo[contFrame];
   image( pac, x-20, y-20);
   tempo_game++
-  if(tempo_game> 10){
+   if(tempo_game> 2){
   contFrame++;
+  tempo_game = 0 
 }
   if ( contFrame > 1) {
      contFrame = 0; 
@@ -133,13 +146,11 @@ function move(){
 		}
 
 function monstros_final(numero_m,boss_x, boss_y){
-	if((lim_monstro(boss_x+4,boss_y)) ||(lim_monstro(boss_x-4,boss_y)) ){
-		velx[numero_m] =  velx[numero_m]  * (-1)
-		}
-	if((lim_monstro(boss_x,boss_y+4)) ||(lim_monstro(boss_x,boss_y-4)) ){
-		vely[numero_m] =  vely[numero_m]  * (-1)
-		}
-	
+	if(lim_monstro(boss_x+4,boss_y) ||lim_monstro(boss_x-4,boss_y) ||lim_monstro(boss_x,boss_y+4) ||lim_monstro(boss_x,boss_y-4) ){
+	velx[numero_m] =  velx[numero_m] * (-1)
+	vely[numero_m] =  vely[numero_m] * (-1)
+	}
+
 	 monstroX[numero_m] += velx[numero_m];
 	 monstroY[numero_m] += vely[numero_m];
 	}
@@ -250,6 +261,7 @@ function monstro(numero_m,posx_m,posy_m){
 	 monstroY[numero_m] += vely[numero_m];
 	}
 
+
 function itens(nx,ny){
 	for(var c = parseInt((nx)/40); c <= parseInt((nx)/40); c++ ){
 		for(var l = parseInt((ny)/40); l <= parseInt((ny)/40); l++ ){
@@ -326,12 +338,13 @@ function draw() {
   anima = menu[contFrame];
   image( anima, 0, 0);
   tempo_menu++
-  if(tempo_menu > 15){
+  if(tempo_menu > 5){
   contFrame++;
+  tempo_menu = 0 
 }
   if ( contFrame > 1) {
      contFrame = 0; 
-     tempo_menu = 0 
+     
   }
 for(i=0;i<5;i++){
 	image(img_fase[i],(i*100)+150, 520);
@@ -339,7 +352,7 @@ for(i=0;i<5;i++){
 }
 if(mouseIsPressed && (mouseX >= 150 && mouseX <= 230) && (mouseY >= 520 && mouseY <= 600) )	 {
 blocos[0] =  [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1];  // FASE 1 FASE 1 FASE 1 FASE 1 FASE 1 FASE 1 FASE 1
-blocos[1] =  [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1];  // FASE 1 FASE 1 FASE 1 FASE 1 FASE 1 FASE 1 FASE 1
+blocos[1] =  [1,3,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,3,1];  // FASE 1 FASE 1 FASE 1 FASE 1 FASE 1 FASE 1 FASE 1
 blocos[2] =  [1,0,1,1,0,1,1,1,1,0,1,0,1,1,1,1,0,1,1,0,1];// FASE 1 FASE 1 FASE 1 FASE 1 FASE 1 FASE 1 FASE 1
 blocos[3] =  [1,0,1,1,0,1,1,1,1,0,1,0,1,1,1,1,0,1,1,0,1];
 blocos[4] =  [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1];
@@ -360,14 +373,13 @@ blocos[18] = [1,0,1,1,1,1,1,1,1,0,0,0,1,1,1,1,1,1,1,0,1];
 blocos[19] = [1,3,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,3,1];
 blocos[20] = [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1];
 		d = 1;
-	   v = 3;
 	   placar = 0;
        x = 420;
        y = 660;
        velx = [4,4,4,4,0,4,4,4,-4,4];
 	   vely = [0,0,0,0,-4,4,0,4,0,0];
 	   monstroX = [420,80,500,80,540,540,700,700,700,420];
-       monstroY = [420,80,80,540,540,540,80,700,700,420];
+       monstroY = [460,80,80,540,540,540,80,700,700,460];
 	tela = 1;
 	} 
 if(mouseIsPressed && (mouseX >= 250 && mouseX <= 330) && (mouseY >= 520 && mouseY <= 600) )	 {
@@ -393,7 +405,6 @@ if(mouseIsPressed && (mouseX >= 250 && mouseX <= 330) && (mouseY >= 520 && mouse
 		blocos[19] = [1,3,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,3,1];
 		blocos[20] = [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1];
 		d = 1;
-	   v = 3;
 	   placar = 0;
        x = 420;
        y = 660;
@@ -404,10 +415,10 @@ if(mouseIsPressed && (mouseX >= 250 && mouseX <= 330) && (mouseY >= 520 && mouse
 	tela = 2;
 	}
 if(mouseIsPressed && (mouseX >= 350 && mouseX <= 430) && (mouseY >= 520 && mouseY <= 600) )	 {
-		blocos[0] =  [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1];// FASE 3 FASE 3 FASE 3 FASE 3 FASE 3 FASE 3 FASE 3 FASE 3 FASE 3
-		blocos[1] =  [1,1,1,2,1,2,1,2,1,2,1,2,1,2,1,2,1,2,1,1,1];// FASE 3 FASE 3 FASE 3 FASE 3 FASE 3 FASE 3 FASE 3 FASE 3 FASE 3
+		blocos[0] =  [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1];// FASE 3 FASE 3 FASE 3 FASE 3 FASE 3 FASE 3 FASE 3 FASE 3
+		blocos[1] =  [1,1,1,2,1,2,1,2,1,2,1,2,1,2,1,2,1,2,1,1,1];// FASE 3 FASE 3 FASE 3 FASE 3 FASE 3 FASE 3 FASE 3 FASE 3
 		blocos[2] =  [1,1,1,2,1,2,1,2,1,2,1,2,1,2,1,2,1,2,1,1,1];
-		blocos[3] =  [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1];
+		blocos[3] =  [1,3,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1];
 		blocos[4] =  [1,0,1,2,1,2,1,2,1,2,1,2,1,2,1,2,1,2,1,0,1];
 		blocos[5] =  [1,0,1,2,1,2,1,2,1,2,1,2,1,2,1,2,1,2,1,0,1];
 		blocos[6] =  [1,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1];
@@ -416,17 +427,16 @@ if(mouseIsPressed && (mouseX >= 350 && mouseX <= 430) && (mouseY >= 520 && mouse
 		blocos[9] =  [1,1,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1];
 		blocos[10] = [1,0,0,0,0,1,0,0,0,0,0,0,0,0,0,1,0,0,0,0,1];
 		blocos[11] = [1,0,1,1,0,1,0,1,1,1,1,1,1,1,0,1,0,1,1,0,1];
-		blocos[12] = [1,0,1,1,0,0,0,1,1,1,1,1,1,1,0,0,0,1,1,0,1];
+		blocos[12] = [1,3,1,1,0,0,0,1,1,1,1,1,1,1,0,0,0,1,1,0,1];
 		blocos[13] = [1,0,0,0,0,1,0,0,0,0,0,0,0,0,0,1,0,0,0,0,1];
 		blocos[14] = [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1,1];
 		blocos[15] = [1,1,1,1,1,2,1,2,1,2,1,2,1,2,1,2,1,1,0,1,1];
 		blocos[16] = [1,1,1,1,1,2,1,2,1,2,1,2,1,2,1,2,1,1,0,1,1];
-		blocos[17] = [1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1];
+		blocos[17] = [1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,3,1];
 		blocos[18] = [1,0,0,0,1,2,1,2,1,2,1,2,1,2,1,2,1,1,1,1,1];
 		blocos[19] = [1,0,0,1,1,2,1,2,1,2,1,2,1,2,1,2,1,1,1,1,1];
 		blocos[20] = [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1];
 	   d = 3;
-	   v = 3;
 	   placar = 0;
        x = 60;
        y = 780;
@@ -459,7 +469,6 @@ if(mouseIsPressed && (mouseX >= 450 && mouseX <= 530) && (mouseY >= 520 && mouse
 		blocos[19] = [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1];
 		blocos[20] = [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1];
 	   d = 4;
-	   v = 3;
 	   placar = 0;
        x = 420;
        y = 740;
@@ -471,8 +480,8 @@ if(mouseIsPressed && (mouseX >= 450 && mouseX <= 530) && (mouseY >= 520 && mouse
 	tela = 4 ;
 	}
 if(mouseIsPressed && (mouseX >= 550 && mouseX <= 630) && (mouseY >= 520 && mouseY <= 600) )	 {
-		blocos[0] =  [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1];
-		blocos[1] =  [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1];
+		blocos[0] =  [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]; // FASE 5 FASE 5 FASE 5 FASE 5 FASE 5 FASE 5 FASE 5 FASE 5
+		blocos[1] =  [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1]; // FASE 5 FASE 5 FASE 5 FASE 5 FASE 5 FASE 5 FASE 5 FASE 5
 		blocos[2] =  [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1];
 		blocos[3] =  [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1];
 		blocos[4] =  [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1];
@@ -493,14 +502,13 @@ if(mouseIsPressed && (mouseX >= 550 && mouseX <= 630) && (mouseY >= 520 && mouse
 		blocos[19] = [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1];
 		blocos[20] = [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1];
 		d = 1;
-	   v = 3;
 	   placar = 0;
        x = 420;
-       y = 660;
-       velx = [4,0,0,-4,-4,4,-4,4,0,4,4,4,-4,-4,4,4,4,4,0];
-	   vely = [0,-4,-4,0,0,-4,0,4,4,4,0,0,4,4,4,4,0,0,0,4];
-	   monstroX = [80,80,780,780,160,340,700,160,700,160,580,420,100,720,80,320,600];
-       monstroY = [80,580,80,580,160,160,160,360,360,700,700,420,300,200,200,520,300];
+       y = 780;
+       velx = [4,-4,-4,4,-4,4,-4,4];
+	   vely = [0,0,0,0,0,0,0,0,0,0];
+	   monstroX = [60,780,780,60,780,60,60,780];
+       monstroY = [420,500,340,260,180,100,580,660];
 	tela = 5 ;
 	}
 
@@ -521,7 +529,16 @@ if(mouseIsPressed && (mouseX >= 550 && mouseX <= 630) && (mouseY >= 520 && mouse
 	Info();
 	 for(i=0;i<10;i++){
 		 monstro(i, monstroX[i],monstroY[i]);
-		image(fantasma,monstroX[i]-15, monstroY[i]-15)
+		fantasmas =	fantasma[contFrame2];
+		image( fantasmas,monstroX[i]-15, monstroY[i]-15);
+		tempo_fantasma++
+		if(tempo_fantasma > 60){
+		contFrame2++;
+		tempo_fantasma = 0;
+		}
+		if ( contFrame2 >= 7 ) {
+     contFrame2 = 0; 
+  } 
 		colisao(420,660,x,y,monstroX[i],monstroY[i]);
 	  }
 	  if(placar == 2020){
@@ -575,9 +592,19 @@ else if(tela === 2){
   	pac_man(pac_sentido);
 	Info();
 	for(i=0;i<velx.length;i++){
-		monstro(i, monstroX[i],monstroY[i]); 
-		image(fantasma,monstroX[i]-15, monstroY[i]-15)
-		colisao(420,660,x,y,monstroX[i],monstroY[i]);
+		  monstro(i, monstroX[i],monstroY[i]);
+		fantasmas =	fantasma[contFrame2];
+		image( fantasmas,monstroX[i]-15, monstroY[i]-15);
+		tempo_fantasma++
+		if(tempo_fantasma > 60){
+		contFrame2++;
+		tempo_fantasma = 0;
+		}
+		if ( contFrame2 >= 7 ) {
+     contFrame2 = 0; 
+  } 
+		colisao(420,660,x,y,monstroX[i],monstroY[i]); 
+
 	  }
 	  
 	if(v <= 0){
@@ -587,7 +614,7 @@ else if(tela === 2){
 		blocos[0] =  [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1];
 		blocos[1] =  [1,1,1,2,1,2,1,2,1,2,1,2,1,2,1,2,1,2,1,1,1];
 		blocos[2] =  [1,1,1,2,1,2,1,2,1,2,1,2,1,2,1,2,1,2,1,1,1];
-		blocos[3] =  [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1];
+		blocos[3] =  [1,3,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1];
 		blocos[4] =  [1,0,1,2,1,2,1,2,1,2,1,2,1,2,1,2,1,2,1,0,1];
 		blocos[5] =  [1,0,1,2,1,2,1,2,1,2,1,2,1,2,1,2,1,2,1,0,1];
 		blocos[6] =  [1,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1];
@@ -596,12 +623,12 @@ else if(tela === 2){
 		blocos[9] =  [1,1,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1];
 		blocos[10] = [1,0,0,0,0,1,0,0,0,0,0,0,0,0,0,1,0,0,0,0,1];
 		blocos[11] = [1,0,1,1,0,1,0,1,1,1,1,1,1,1,0,1,0,1,1,0,1];
-		blocos[12] = [1,0,1,1,0,0,0,1,1,1,1,1,1,1,0,0,0,1,1,0,1];
+		blocos[12] = [1,3,1,1,0,0,0,1,1,1,1,1,1,1,0,0,0,1,1,0,1];
 		blocos[13] = [1,0,0,0,0,1,0,0,0,0,0,0,0,0,0,1,0,0,0,0,1];
 		blocos[14] = [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1,1];
 		blocos[15] = [1,1,1,1,1,2,1,2,1,2,1,2,1,2,1,2,1,1,0,1,1];
 		blocos[16] = [1,1,1,1,1,2,1,2,1,2,1,2,1,2,1,2,1,1,0,1,1];
-		blocos[17] = [1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1];
+		blocos[17] = [1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,3,1];
 		blocos[18] = [1,0,0,0,1,2,1,2,1,2,1,2,1,2,1,2,1,1,1,1,1];
 		blocos[19] = [1,0,0,1,1,2,1,2,1,2,1,2,1,2,1,2,1,1,1,1,1];
 		blocos[20] = [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1];
@@ -632,9 +659,18 @@ else if(tela === 3){
 	pac_man(pac_sentido);
 	Info();
 	for(i=0;i<velx.length;i++){
-		monstro(i, monstroX[i],monstroY[i]); 
-		image(fantasma,monstroX[i]-15, monstroY[i]-15)
-		colisao(60,780,x,y,monstroX[i],monstroY[i]);
+		  monstro(i, monstroX[i],monstroY[i]);
+		fantasmas =	fantasma[contFrame2];
+		image( fantasmas,monstroX[i]-15, monstroY[i]-15);
+		tempo_fantasma++
+		if(tempo_fantasma > 60){
+		contFrame2++;
+		tempo_fantasma = 0;
+		}
+		if ( contFrame2 >= 7 ) {
+     contFrame2 = 0; 
+  } 
+		colisao(420,660,x,y,monstroX[i],monstroY[i]);
 	  }
 	  
 	if(v <= 0){
@@ -688,9 +724,18 @@ else if(tela === 3){
 	pac_man(pac_sentido);
 	Info();
 	for(i=0;i<velx.length;i++){
-		monstro(i, monstroX[i],monstroY[i]); 
-		image(fantasma,monstroX[i]-15, monstroY[i]-15)
-		colisao(60,780,x,y,monstroX[i],monstroY[i]);
+		 monstro(i, monstroX[i],monstroY[i]);
+		fantasmas =	fantasma[contFrame2];
+		image( fantasmas,monstroX[i]-15, monstroY[i]-15);
+		tempo_fantasma++
+		if(tempo_fantasma > 60){
+		contFrame2++;
+		tempo_fantasma = 0;
+		}
+		if ( contFrame2 >= 7 ) {
+     contFrame2 = 0; 
+  } 
+		colisao(420,660,x,y,monstroX[i],monstroY[i]);
 	  }
 	  
 	if(v <= 0){
@@ -724,7 +769,7 @@ else if(tela === 3){
        x = 420;
        y = 660;
        velx = [4,0,0,-4,-4,4,-4,4,0,4,4,4,-4,-4,4,4,4,4,0];
-	   vely = [0,-4,-4,0,0,-4,0,4,4,4,0,0,4,4,4,4,0,0,0,4];
+	   vely = [0,-4,-4,0,0,-4,0,4,4,4,4,0,4,4,4,4,0,0,0,4];
 	   monstroX = [80,80,780,780,160,340,700,160,700,160,580,420,100,720,80,320,600];
        monstroY = [80,580,80,580,160,160,160,360,360,700,700,420,300,200,200,520,300];
 	tela = 5 ;
@@ -746,9 +791,18 @@ else if(tela === 3){
 	pac_man(pac_sentido);
 	Info();
 	for(i=0;i<velx.length;i++){
-		monstros_final(i, monstroX[i],monstroY[i]); 
-		image(fantasma,monstroX[i]-15, monstroY[i]-15)
-		colisao(60,780,x,y,monstroX[i],monstroY[i]);
+	  monstros_final(i, monstroX[i],monstroY[i]);
+		fantasmas =	fantasma[contFrame2];
+		image( fantasmas,monstroX[i]-15, monstroY[i]-15);
+		tempo_fantasma++
+		if(tempo_fantasma > 60){
+		contFrame2++;
+		tempo_fantasma = 0;
+		}
+		if ( contFrame2 >= 7 ) {
+     contFrame2 = 0; 
+  } 
+		colisao(420,660,x,y,monstroX[i],monstroY[i]);
 	  }
 	  
 	if(v <= 0){
@@ -768,12 +822,13 @@ if(tela == 6){
   game = gameover[contFrame];
   image( game, 0, 0);
   tempo_game++
-  if(tempo_game> 30){
+  if(tempo_game> 2){
   contFrame++;
+   tempo_game = 0 
 }
   if ( contFrame > 1) {
      contFrame = 0; 
-     tempo_menu = 0 
+    
   } 
  
 	 if (keyIsDown(ENTER) ) {
@@ -787,7 +842,11 @@ if(tela == 6){
 
 else if(tela == 7){
 	background(255);
-	 image(zerou,0,0);
+  image( zerou, 0, 0);
+if (keyIsDown(ENTER) ) {
+	   tela = 0; 
+    }
+  }
 	}
 	
   	}
