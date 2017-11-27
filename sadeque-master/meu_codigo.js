@@ -655,7 +655,7 @@ else if(tela === 3){
 		if ( contFrame2 >= 7 ) {
      contFrame2 = 0; 
   } 
-		colisao(420,660,x,y,monstroX[i],monstroY[i]);
+		colisao(60,780,x,y,monstroX[i],monstroY[i]);
 	  }
 	  
 	if(v <= 0){
