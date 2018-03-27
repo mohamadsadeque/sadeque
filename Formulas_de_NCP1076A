@@ -3,10 +3,14 @@
 #define V_BO_ON 0.8
 #define V_ACOVP_ON 29
 #define V_BO_OPP 2.65
+#define V_OUT 12
+#define V_IN_MIN 127
+#define I_PK 0.650
+#define F_SW 60000
 using namespace std;
 
 
-float V_BULK_ON, R_Lower, R_Upper, Vin, N, Vout, VF, Ipeak;
+float V_BULK_ON, R_Lower, R_Upper, N, VF,LF,C_TOT, Ipeak, V_IN,d_I_L;
 int n;
 int main()
 {
@@ -17,7 +21,13 @@ int main()
     cout << "2. power losses on resistive divider for worst case: - eq.3 "<< endl;
     cout << "3.V_BULK_OVP: - eq.4 "<< endl;
     cout << "4.V_BULK_OPP: - eq.5 "<< endl;
-    cout << "5. V_DRAIN_MAX - eq.7 " << endl;
+    cout << "5. XXXXXXX" << endl;
+    cout << "6. V_DRAIN_MAX - eq.7 " << endl;
+    cout << "7. D_MAX - eq.8 " << endl;
+    cout << "8. Primary inductance (L)- eq.9" << endl;
+    cout << "9." << endl;
+
+
 
 
     cin >> n;
@@ -28,21 +38,21 @@ int main()
             cin >> V_BULK_ON;
             cout << " Digite R_Lower(k): " << endl;
             cin >> R_Lower;
-            cout << " R_Upper : " << ((R_Lower * 1000) / ( (V_BO_ON) /( (V_BULK_ON) - (V_BO_ON)) )) << endl << "" << endl;
+            cout << " R_Upper : " << ((R_Lower * 1000) / ( (V_BO_ON) /( (V_BULK_ON) - (V_BO_ON)) )) << "\n\n";
         break;
         case 2:
             cout << " Digite V_BULK(V): " << endl;
             cin >> V_BULK_ON;
             cout << " Digite R_Lower(k): " << endl;
-            cin >> R_Lower;
+            cin >> R_Lower d_I_L;
             cout << " Digite R_Upper(k): " << endl;
             cin >> R_Upper;
-            cout << "" << endl<< (pow( (V_BULK_ON) , 2))/( (R_Upper*1000) + ((R_Lower*1000) )) << " W " << endl << ""<< endl;
+            cout << "" << endl<< (pow( (V_BULK_ON) , 2))/( (R_Upper*1000) + ((R_Lower*1000) )) << " W \n\n";
         break;
         case 3:
             cout << "Digite V_BULK_ON: " << endl;
             cin >> V_BULK_ON;
-            cout << V_ACOVP_ON *(V_BULK_ON / V_BO_ON) << "Vdc"  << endl<< ""<< endl;
+            cout << V_ACOVP_ON *(V_BULK_ON / V_BO_ON) << "Vdc\n\n";
 
         break;
         case 4:
@@ -52,13 +62,35 @@ int main()
             cin >> R_Lower;
             cout << " Digite R_Upper(k): " << endl;
             cin >> R_Upper;
-            cout << V_BO_OPP * (R_Lower*pow(10,3) + R_Upper*pow(10,3) )/ R_Lower*pow(10,3) << "Vdc" <<endl<< ""<< endl;
+            cout << V_BO_O d_I_LPP * (R_Lower*pow(10,3) + R_Upper*pow(10,3) )/ R_Lower*pow(10,3) << "Vdc\n\n";
 
         break;
         case 5:
-
+            cout << "Digite VF" << endl;
+            cin>> VF;
+            cout << "Digite N" << endl;
+            cin >> N;
+            if((N*(V_OUT + VF) ) < V_IN_MIN)
+                cout << N*(V_OUT + VF)  << " < " << V_IN_MIN << "  :  TRUE\n\n";
+            else
+                cout << N*(V_OUT + VF) << " < " << V_IN_MIN << "  :  FALSE\n\n";
         break;
-
+        case 6: //-------//
+            cout << V_IN + N* (V_OUT + VF) + Ipeak * sqrt((LF)/C_TOT) << "\n\n";
+        break;
+        case 7:
+            cout << (N * (V_OUT + VF) ) / (N* (V_OUT + VF ) + V_IN_MIN ) << "\n\n";
+        break;
+        case 8:
+            d_I_L = ((V_IN * D )/(L * F_SW) )
+            I_PEAK =  ((I_AVG)/D) + (d_I_L)/2;
+            I_L_AVG = I_PEAK  -  (d_I_L / 2) ;
+            K = (d_I_L) / (I_L_AVG);
+            cout << pow((V_IN * D), 2)/ (F_SW * K * P_IN) << "\n\n" << endl;
+        break;
+        case 9:
+            
+        break;
 
 
 
